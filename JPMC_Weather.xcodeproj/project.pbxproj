@@ -13,6 +13,7 @@
 		8990285929D8C45500D54230 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8990285829D8C45500D54230 /* Assets.xcassets */; };
 		8990285C29D8C45500D54230 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8990285A29D8C45500D54230 /* LaunchScreen.storyboard */; };
 		8990286429D8C63200D54230 /* WeatherDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286329D8C63200D54230 /* WeatherDataModel.swift */; };
+		8990286829DB8AB200D54230 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286729DB8AB200D54230 /* WeatherView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		8990285B29D8C45500D54230 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8990285D29D8C45500D54230 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8990286329D8C63200D54230 /* WeatherDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataModel.swift; sourceTree = "<group>"; };
+		8990286729DB8AB200D54230 /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				8990284F29D8C45400D54230 /* AppDelegate.swift */,
 				8990285129D8C45400D54230 /* SceneDelegate.swift */,
 				8990285329D8C45400D54230 /* WeatherViewController.swift */,
+				8990286729DB8AB200D54230 /* WeatherView.swift */,
 				8990286329D8C63200D54230 /* WeatherDataModel.swift */,
 				8990285829D8C45500D54230 /* Assets.xcassets */,
 				8990285A29D8C45500D54230 /* LaunchScreen.storyboard */,
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8990286829DB8AB200D54230 /* WeatherView.swift in Sources */,
 				8990286429D8C63200D54230 /* WeatherDataModel.swift in Sources */,
 				8990285429D8C45400D54230 /* WeatherViewController.swift in Sources */,
 				8990285029D8C45400D54230 /* AppDelegate.swift in Sources */,
