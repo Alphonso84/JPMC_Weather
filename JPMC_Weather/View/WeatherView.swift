@@ -9,28 +9,38 @@ import UIKit
 import SwiftUI
 
 struct WeatherView: View {
-    @StateObject private var viewModel = WeatherViewModel()
+    @ObservedObject var viewModel: WeatherViewModel
     
     var body: some View {
-        VStack(spacing:20) {
-            Image(systemName:"sun.min.fill")
+        VStack(spacing: 10) {
+            Spacer()
+            Spacer()
+            if let weatherIcon = viewModel.weatherIconImage {
+                Image(uiImage:weatherIcon)
+            }
+            
+            Text(viewModel._city.replacingOccurrences(of: "%20", with:" "))
+                .fontWeight(.heavy)
             Text(viewModel.temperature)
-                .font(.system(size: 27))
+                .font(.system(size: 57))
             Text(viewModel.weatherDescription)
+            Spacer()
         }
         .onAppear() {
-            viewModel.fetchWeatherData { error in
+            viewModel.fetchWeatherData(for: viewModel._city) { error in
                 if let error = error {
                     print("Error fetching weather data: \(error)")
+                } else {
+                    viewModel.fetchWeatherIcon()
                 }
             }
         }
     }
-}
-
-struct WeatherView_Previews: PreviewProvider {
-    static var previews: some View {
-        WeatherView()
+    
+    struct WeatherView_Previews: PreviewProvider {
+        static var previews: some View {
+            WeatherView(viewModel: WeatherViewModel())
+        }
     }
 }
 

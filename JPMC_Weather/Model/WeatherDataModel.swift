@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct WeatherData: Codable {
-    let coord: Coord
+    let coord: Coord?
     let weather: [Weather]
     let base: String
     let main: Main
@@ -70,8 +70,8 @@ struct Clouds: Codable {
 }
 
 struct Sys: Codable {
-    let type: Int
-    let id: Int
+    let type: Int?
+    let id: Int?
     let country: String
     let sunrise: TimeInterval
     let sunset: TimeInterval
