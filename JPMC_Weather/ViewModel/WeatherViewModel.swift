@@ -18,7 +18,8 @@ class WeatherViewModel: ObservableObject {
     
     var temperature: String {
             if let temp = model?.main.temp {
-                return "\(Int(temp))"
+                let fahrenheitTemp = kelvinToFahrenheit(temp)
+                return "\(Int(fahrenheitTemp))"
             } else {
                 return "N/A"
             }
@@ -28,10 +29,15 @@ class WeatherViewModel: ObservableObject {
         model?.weather.first?.description.capitalized ?? "Unknown"
         }
     
+    func kelvinToFahrenheit(_ kelvin: Double) -> Double {
+        return (kelvin - 273.15) * 9 / 5 + 32
+    }
+    
     func fetchWeatherData(completion: @escaping (Error?) -> Void) {
         //In actual app I would never store API Key here.
         let apiKey = "da24ab0246307b1f6a19d127960a39f5"
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(location.coordinate.latitude)&lon=\(location.coordinate.longitude)&appid=\(apiKey)"
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(37.7652)&lon=\(-122.2416)&appid=\(apiKey)"
+        print(urlString)
            guard let url = URL(string:urlString) else {
                completion(NSError(domain: "InvalidURL", code: -1, userInfo: nil))
                return
@@ -51,6 +57,7 @@ class WeatherViewModel: ObservableObject {
                do {
                    let decoder = JSONDecoder()
                    let weatherData = try decoder.decode(WeatherData.self, from: data)
+                   print(weatherData)
                    self?.model = weatherData
                    completion(nil)
                } catch {

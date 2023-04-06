@@ -9,19 +9,20 @@ import UIKit
 import SwiftUI
 
 extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for:indexPath)
+        return cell
     }
-    
-    
 }
 
 class WeatherViewController: UIViewController {
-    let weatherView = WeatherView()
+    
+    let hostingController = UIHostingController(rootView:WeatherView())
     let viewModel = WeatherViewModel()
     let tableView = UITableView()
     
@@ -29,12 +30,10 @@ class WeatherViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupWeatherView()
-        tableView.delegate = self
-        tableView.dataSource = self
+        setupTableView()
     }
     
     func setupWeatherView() {
-        let hostingController = UIHostingController(rootView: weatherView)
         addChild(hostingController)
         view.addSubview(hostingController.view)
         hostingController.view?.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +43,21 @@ class WeatherViewController: UIViewController {
             hostingController.view.leadingAnchor.constraint(equalTo:view.leadingAnchor, constant: 80),
             hostingController.view.trailingAnchor.constraint(equalTo:view.trailingAnchor, constant: -80)
         ])
+    }
+    
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier:"MyCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: hostingController.view.bottomAnchor, constant: 10),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
     }
 }
 
