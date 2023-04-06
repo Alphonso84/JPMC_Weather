@@ -61,12 +61,12 @@ class WeatherViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: hostingController.view.bottomAnchor, constant: 10),
+            tableView.topAnchor.constraint(equalTo: hostingController.view.bottomAnchor, constant: 50),
             tableView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             tableView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 500)
+            tableView.heightAnchor.constraint(equalToConstant: 400)
         ])
         tableView.tableHeaderView = searchController.searchBar
     }
