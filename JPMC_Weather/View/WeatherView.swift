@@ -9,12 +9,21 @@ import UIKit
 import SwiftUI
 
 struct WeatherView: View {
+    @StateObject private var viewModel = WeatherViewModel()
+    
     var body: some View {
         VStack(spacing:20) {
             Image(systemName:"sun.min.fill")
-            Text("80")
+            Text(viewModel.temperature)
                 .font(.system(size: 27))
-            Text("Partly Cloudy")
+            Text(viewModel.weatherDescription)
+        }
+        .onAppear() {
+            viewModel.fetchWeatherData { error in
+                if let error = error {
+                    print("Error fetching weather data: \(error)")
+                }
+            }
         }
     }
 }

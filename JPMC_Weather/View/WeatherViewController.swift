@@ -8,16 +8,32 @@
 import UIKit
 import SwiftUI
 
+extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        <#code#>
+    }
+    
+    
+}
+
 class WeatherViewController: UIViewController {
+    let weatherView = WeatherView()
+    let viewModel = WeatherViewModel()
+    let tableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupWeatherView()
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     func setupWeatherView() {
-        let weatherView = WeatherView()
         let hostingController = UIHostingController(rootView: weatherView)
         addChild(hostingController)
         view.addSubview(hostingController.view)
