@@ -27,16 +27,15 @@ struct WeatherView: View {
             Spacer()
         }
         .onAppear() {
-            viewModel.fetchWeatherData(for: viewModel._city) { error in
-                if let error = error {
-                    print("Error fetching weather data: \(error)")
-                } else {
-                    viewModel.fetchWeatherIcon()
+            if let lastSearchedCity = viewModel.loadLastSearchedCity() {
+                viewModel.fetchWeatherData(for: lastSearchedCity) { error in
+                    if let error = error {
+                        print("Error fetching weather data: \(error)")
+                    }
                 }
             }
         }
     }
-    
     struct WeatherView_Previews: PreviewProvider {
         static var previews: some View {
             WeatherView(viewModel: WeatherViewModel())

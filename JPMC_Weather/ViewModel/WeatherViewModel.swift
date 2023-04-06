@@ -55,8 +55,10 @@ class WeatherViewModel: ObservableObject {
         }
     
     func fetchWeatherData(for city:String, completion: @escaping (Error?) -> Void) {
-        //In actual app I would never store API Key here.
+        
         self._city = city
+        saveLastSearchedCity(city: self._city)
+        //In actual app I would never store API Key here.
         let apiKey = "da24ab0246307b1f6a19d127960a39f5"
         let locationUrlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(37.7652)&lon=\(-122.2416)&appid=\(apiKey)"
         print(locationUrlString)
@@ -90,6 +92,14 @@ class WeatherViewModel: ObservableObject {
             }
         }
         task.resume()
+    }
+    
+    func saveLastSearchedCity(city: String) {
+        UserDefaults.standard.set(city, forKey: "lastSearchedCity")
+    }
+    
+    func loadLastSearchedCity() -> String? {
+        return UserDefaults.standard.string(forKey: "lastSearchedCity")
     }
 }
 
