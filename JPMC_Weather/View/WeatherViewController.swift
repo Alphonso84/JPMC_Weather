@@ -84,6 +84,24 @@ class WeatherViewController: UIViewController {
 
 // MARK: - TableView Delegate & DataSource & UISearchBarDelegate
 extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+    func presentDeleteConfirmationAlert(at indexPath: IndexPath) {
+        let alertController = UIAlertController(title: "Delete Favorite City",
+                                                message: "Are you sure you want to remove this city from your favorite cities?",
+                                                preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+            let cityName = self.viewModel.favoriteCities[indexPath.row]
+            self.viewModel.favoriteCities.remove(at: indexPath.row)
+            self.viewModel.saveFavoriteCities()
+            self.viewModel.removeFavoriteCity(byName: cityName)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+        alertController.addAction(deleteAction)
+
+        present(alertController, animated: true)
+    }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text {
@@ -127,11 +145,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let cityName = viewModel.favoriteCities[indexPath.row]
-            viewModel.favoriteCities.remove(at: indexPath.row)
-            viewModel.saveFavoriteCities()
-            viewModel.removeFavoriteCity(byName: cityName)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            presentDeleteConfirmationAlert(at: indexPath)
         }
     }
 }
