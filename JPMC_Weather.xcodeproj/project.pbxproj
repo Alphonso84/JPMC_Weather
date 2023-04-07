@@ -15,6 +15,7 @@
 		8990286429D8C63200D54230 /* WeatherDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286329D8C63200D54230 /* WeatherDataModel.swift */; };
 		8990286829DB8AB200D54230 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286729DB8AB200D54230 /* WeatherView.swift */; };
 		8990286A29DE2EDE00D54230 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286929DE2EDE00D54230 /* WeatherViewModel.swift */; };
+		8990286F29DF6D5D00D54230 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990286E29DF6D5D00D54230 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		8990286329D8C63200D54230 /* WeatherDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataModel.swift; sourceTree = "<group>"; };
 		8990286729DB8AB200D54230 /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		8990286929DE2EDE00D54230 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
+		8990286E29DF6D5D00D54230 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		8990284E29D8C45400D54230 /* JPMC_Weather */ = {
 			isa = PBXGroup;
 			children = (
+				8990286E29DF6D5D00D54230 /* LocationManager.swift */,
 				8990284F29D8C45400D54230 /* AppDelegate.swift */,
 				8990285129D8C45400D54230 /* SceneDelegate.swift */,
 				8990286B29DE331600D54230 /* Model */,
@@ -170,6 +173,7 @@
 				8990286829DB8AB200D54230 /* WeatherView.swift in Sources */,
 				8990286A29DE2EDE00D54230 /* WeatherViewModel.swift in Sources */,
 				8990286429D8C63200D54230 /* WeatherDataModel.swift in Sources */,
+				8990286F29DF6D5D00D54230 /* LocationManager.swift in Sources */,
 				8990285429D8C45400D54230 /* WeatherViewController.swift in Sources */,
 				8990285029D8C45400D54230 /* AppDelegate.swift in Sources */,
 				8990285229D8C45400D54230 /* SceneDelegate.swift in Sources */,
@@ -314,6 +318,8 @@
 				DEVELOPMENT_TEAM = 6257XTCRBF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = JPMC_Weather/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location to provide localized weather data";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to provide localized weather data";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -342,6 +348,8 @@
 				DEVELOPMENT_TEAM = 6257XTCRBF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = JPMC_Weather/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location to provide localized weather data";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to provide localized weather data";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

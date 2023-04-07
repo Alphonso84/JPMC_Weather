@@ -7,16 +7,24 @@
 
 import UIKit
 import Combine
+import CoreLocation
 
 class WeatherViewModel: ObservableObject {
     @Published private var model: WeatherData?
     @Published var weatherIconImage: UIImage?
     @Published var _city: String = ""
+    let locationManager = CLLocationManager()
+    var location = CLLocation()
     
     var weatherIcon: String? {
         model?.weather.first?.icon
     }
-    
+    var cityName: String {
+        guard let name = model?.name else {
+            return "No City Name"
+        }
+        return name
+    }
     var temperature: String {
         if let temp = model?.main.temp {
             let fahrenheitTemp = kelvinToFahrenheit(temp)
@@ -54,17 +62,26 @@ class WeatherViewModel: ObservableObject {
             task.resume()
         }
     
-    func fetchWeatherData(for city:String, completion: @escaping (Error?) -> Void) {
-        
-        self._city = city
-        saveLastSearchedCity(city: self._city)
+    func fetchWeatherData(for city:String? = nil, location: CLLocation? = nil, completion: @escaping (Error?) -> Void) {
         //In actual app I would never store API Key here.
         let apiKey = "da24ab0246307b1f6a19d127960a39f5"
-        let locationUrlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(37.7652)&lon=\(-122.2416)&appid=\(apiKey)"
-        print(locationUrlString)
-        let cityUrlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
-        print(cityUrlString)
-        guard let url = URL(string:cityUrlString) else {
+        var urlString: String = ""
+        var latitude = Double()
+        var longitude = Double()
+        
+        if let city = city {
+            self._city = city
+            urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
+            saveLastSearchedCity(city: self._city)
+        }
+        if let location = location {
+            self.location = location
+            latitude = location.coordinate.latitude
+            longitude = location.coordinate.longitude
+            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(location.coordinate.latitude)&lon=\(location.coordinate.longitude)&appid=\(apiKey)"
+        }
+        
+        guard let url = URL(string:urlString) else {
             completion(NSError(domain: "InvalidURL", code: -1, userInfo: nil))
             return
         }

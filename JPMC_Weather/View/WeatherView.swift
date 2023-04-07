@@ -10,6 +10,7 @@ import SwiftUI
 
 struct WeatherView: View {
     @ObservedObject var viewModel: WeatherViewModel
+    @StateObject private var locationManager = LocationManager()
     
     var body: some View {
         VStack(spacing: 10) {
@@ -19,7 +20,7 @@ struct WeatherView: View {
                 Image(uiImage:weatherIcon)
             }
             
-            Text(viewModel._city.replacingOccurrences(of: "%20", with:" "))
+            Text(viewModel.cityName)
                 .fontWeight(.heavy)
             Text(viewModel.temperature)
                 .font(.system(size: 57))
@@ -27,12 +28,21 @@ struct WeatherView: View {
             Spacer()
         }
         .onAppear() {
-            if let lastSearchedCity = viewModel.loadLastSearchedCity() {
-                viewModel.fetchWeatherData(for: lastSearchedCity) { error in
+            if let location = viewModel.locationManager.location {
+                viewModel.fetchWeatherData(location: location) { error in
                     if let error = error {
                         print("Error fetching weather data: \(error)")
                     }
                 }
+            } else {
+                if let lastSearchedCity = viewModel.loadLastSearchedCity() {
+                    viewModel.fetchWeatherData(for: lastSearchedCity) { error in
+                        if let error = error {
+                            print("Error fetching weather data: \(error)")
+                        }
+                    }
+                }
+                
             }
         }
     }
