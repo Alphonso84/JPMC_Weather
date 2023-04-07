@@ -21,7 +21,7 @@ class WeatherViewModel: ObservableObject {
     }
     var cityName: String {
         guard let name = model?.name else {
-            return "No City Name"
+            return "Search for a City"
         }
         return name
     }
@@ -78,7 +78,7 @@ class WeatherViewModel: ObservableObject {
             self.location = location
             latitude = location.coordinate.latitude
             longitude = location.coordinate.longitude
-            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(location.coordinate.latitude)&lon=\(location.coordinate.longitude)&appid=\(apiKey)"
+            urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
         }
         
         guard let url = URL(string:urlString) else {
