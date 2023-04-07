@@ -99,7 +99,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
             self.tableView.deleteRows(at: [indexPath], with: .fade)
         }
         alertController.addAction(deleteAction)
-
+        searchController.dismiss(animated: true, completion: nil)
         present(alertController, animated: true)
     }
     
