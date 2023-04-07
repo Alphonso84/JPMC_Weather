@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import Combine
 
 class WeatherViewController: UIViewController {
     lazy var hostingController = UIHostingController(rootView: WeatherView(viewModel: viewModel))
@@ -14,6 +15,7 @@ class WeatherViewController: UIViewController {
     let tableView = UITableView()
     let searchController = UISearchController(searchResultsController: nil)
     let scrollView = UIScrollView()
+    private var favoritesObserver: AnyCancellable?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,11 @@ class WeatherViewController: UIViewController {
         setupWeatherView()
         setupSearchBar()
         setupTableView()
+        favoritesObserver = viewModel.$favoriteCities.sink { [weak self] _ in
+               DispatchQueue.main.async {
+                   self?.tableView.reloadData()
+               }
+           }
     }
 
     func setupScrollView() {
@@ -91,12 +98,27 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
         }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        viewModel.favoriteCities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for:indexPath)
-        return cell
+            cell.textLabel?.text = viewModel.favoriteCities[indexPath.row]
+            return cell
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+            return true
+        }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+            if editingStyle == .delete {
+                let cityName = viewModel.favoriteCities[indexPath.row]
+                viewModel.favoriteCities.remove(at: indexPath.row)
+                viewModel.saveFavoriteCities()
+                viewModel.removeFavoriteCity(byName: cityName)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        }
 }
 

@@ -10,6 +10,7 @@ import CoreLocation
 
 class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     private let locationManager = CLLocationManager()
+    private let viewModel = WeatherViewModel()
     
     @Published var location: CLLocation?
     
@@ -21,8 +22,19 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
         locationManager.startUpdatingLocation()
     }
     
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+            if status == .authorizedWhenInUse || status == .authorizedAlways {
+                // Request location update manually
+                manager.requestLocation()
+                viewModel.fetchWeatherData(location:location) { error in
+                }
+            }
+        }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.last
+        if let lastLocation = locations.last {
+            location = lastLocation
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

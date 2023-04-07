@@ -13,6 +13,7 @@ class WeatherViewModel: ObservableObject {
     @Published private var model: WeatherData?
     @Published var weatherIconImage: UIImage?
     @Published var _city: String = ""
+    @Published var favoriteCities: [String] = []
     let locationManager = CLLocationManager()
     var location = CLLocation()
     
@@ -36,6 +37,10 @@ class WeatherViewModel: ObservableObject {
     
     var weatherDescription: String {
         model?.weather.first?.description.capitalized ?? "Unknown"
+    }
+    
+    init() {
+        loadFavoriteCities()
     }
     
     func kelvinToFahrenheit(_ kelvin: Double) -> Double {
@@ -111,6 +116,21 @@ class WeatherViewModel: ObservableObject {
             }
         }
         task.resume()
+    }
+    
+    func saveFavoriteCities() {
+        UserDefaults.standard.set(favoriteCities, forKey: "favoriteCities")
+    }
+    
+    func loadFavoriteCities() {
+        if let loadedFavoritesCities = UserDefaults.standard.array(forKey: "favoriteCities") as? [String] {
+            favoriteCities = loadedFavoritesCities
+        }
+    }
+    
+    func removeFavoriteCity(byName cityName: String) {
+        favoriteCities.removeAll(where: { $0 == cityName })
+        saveFavoriteCities()
     }
     
     func saveLastSearchedCity(city: String) {
