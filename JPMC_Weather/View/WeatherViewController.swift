@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 
 class WeatherViewController: UIViewController {
+    // MARK: - Properties
     lazy var hostingController = UIHostingController(rootView: WeatherView(viewModel: viewModel))
     let viewModel = WeatherViewModel()
     let tableView = UITableView()
@@ -17,6 +18,7 @@ class WeatherViewController: UIViewController {
     let scrollView = UIScrollView()
     private var favoritesObserver: AnyCancellable?
 
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -31,6 +33,7 @@ class WeatherViewController: UIViewController {
            }
     }
 
+    // MARK: - UI Setup
     func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -79,8 +82,7 @@ class WeatherViewController: UIViewController {
     }
 }
 
-
-//TableView Delegate DataSource
+// MARK: - TableView Delegate & DataSource & UISearchBarDelegate
 extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -93,9 +95,10 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
                 }
             }
         }
-            searchBar.text = ""
-            searchBar.resignFirstResponder()
-        }
+        searchBar.showsCancelButton = false
+        searchBar.resignFirstResponder()
+        searchBar.text = ""
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.favoriteCities.count
@@ -103,15 +106,15 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for:indexPath)
-            cell.textLabel?.text = viewModel.favoriteCities[indexPath.row]
-            return cell
+        cell.textLabel?.text = viewModel.favoriteCities[indexPath.row]
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //When favorite city is tapped call is made to get weather for that city
+        // When a favorite city is tapped, fetch its weather data
         let city = viewModel.favoriteCities[indexPath.row].replacingOccurrences(of: " ", with: "%20")
-        viewModel.fetchWeatherData(for:city) { error in
+        viewModel.fetchWeatherData(for: city) { error in
             if let error = error {
                 print("Error fetching weather data: \(error)")
             }
@@ -119,17 +122,16 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-            return true
-        }
+        return true
+    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-            if editingStyle == .delete {
-                let cityName = viewModel.favoriteCities[indexPath.row]
-                viewModel.favoriteCities.remove(at: indexPath.row)
-                viewModel.saveFavoriteCities()
-                viewModel.removeFavoriteCity(byName: cityName)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-            }
+        if editingStyle == .delete {
+            let cityName = viewModel.favoriteCities[indexPath.row]
+            viewModel.favoriteCities.remove(at: indexPath.row)
+            viewModel.saveFavoriteCities()
+            viewModel.removeFavoriteCity(byName: cityName)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
 }
-

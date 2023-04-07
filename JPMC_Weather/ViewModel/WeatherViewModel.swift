@@ -10,6 +10,7 @@ import Combine
 import CoreLocation
 
 class WeatherViewModel: ObservableObject {
+    //MARK: - Properties
     @Published private var model: WeatherData?
     @Published var weatherIconImage: UIImage?
     @Published var _city: String = ""
@@ -20,15 +21,17 @@ class WeatherViewModel: ObservableObject {
     var weatherIcon: String? {
         model?.weather.first?.icon
     }
+    
     var cityName: String {
         guard let name = model?.name else {
             return "Search for a City"
         }
         return name
     }
+    
     var temperature: String {
         if let temp = model?.main.temp {
-            let fahrenheitTemp = kelvinToFahrenheit(temp)
+            let fahrenheitTemp = temp.kelvinToFahrenheit()
             return "\(Int(fahrenheitTemp))"
         } else {
             return "N/A"
@@ -38,15 +41,14 @@ class WeatherViewModel: ObservableObject {
     var weatherDescription: String {
         model?.weather.first?.description.capitalized ?? "Unknown"
     }
-    
+    //MARK: - Init
     init() {
         loadFavoriteCities()
     }
+    //MARK: - API Calls
     
-    func kelvinToFahrenheit(_ kelvin: Double) -> Double {
-        return (kelvin - 273.15) * 9 / 5 + 32
-    }
-    
+    //Fetch Weather Icon base on iconCode from response
+    //This method is called in fetchWeatherData
     func fetchWeatherIcon() {
             guard let iconCode = weatherIcon else {
                 return
@@ -67,57 +69,61 @@ class WeatherViewModel: ObservableObject {
             task.resume()
         }
     
-    func fetchWeatherData(for city:String? = nil, location: CLLocation? = nil, completion: @escaping (Error?) -> Void) {
-        //In actual app I would never store API Key here.
+    func fetchWeatherData(for city: String? = nil, location: CLLocation? = nil, completion: @escaping (Error?) -> Void) {
+        // API Key for OpenWeatherMap (should be stored securely in an actual app)
         let apiKey = "da24ab0246307b1f6a19d127960a39f5"
         var urlString: String = ""
         var latitude = Double()
         var longitude = Double()
-        
+        // If city name is provided, set up the API URL using city name
         if let city = city {
             self._city = city
             urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
             saveLastSearchedCity(city: self._city)
         }
+        // If CLLocation object is provided, set up the API URL using latitude and longitude
         if let location = location {
             self.location = location
             latitude = location.coordinate.latitude
             longitude = location.coordinate.longitude
             urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
         }
-        
-        guard let url = URL(string:urlString) else {
+        // Ensure the API URL is valid
+        guard let url = URL(string: urlString) else {
             completion(NSError(domain: "InvalidURL", code: -1, userInfo: nil))
             return
         }
-        
+        // Create a URLSession data task to fetch weather data
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            // If an error occurs, pass it to the completion handler
             if let error = error {
                 completion(error)
                 return
             }
-            
+            // Ensure data is received from the API
             guard let data = data else {
                 completion(NSError(domain: "NoData", code: -1, userInfo: nil))
                 return
             }
-            
+            // Attempt to decode the received data into a WeatherData object
             do {
                 let decoder = JSONDecoder()
                 let weatherData = try decoder.decode(WeatherData.self, from: data)
                 print(weatherData)
+                // Update the model and fetch the weather icon on the main thread
                 DispatchQueue.main.async {
                     self?.model = weatherData
                     self?.fetchWeatherIcon()
                 }
                 completion(nil)
             } catch {
+                // If decoding fails, pass the error to the completion handler
                 completion(error)
             }
         }
         task.resume()
     }
-    
+   //MARK: - Favorite City Methods
     func saveFavoriteCities() {
         UserDefaults.standard.set(favoriteCities, forKey: "favoriteCities")
     }
@@ -133,6 +139,7 @@ class WeatherViewModel: ObservableObject {
         saveFavoriteCities()
     }
     
+//MARK: - Last Searched City Methods
     func saveLastSearchedCity(city: String) {
         UserDefaults.standard.set(city, forKey: "lastSearchedCity")
     }

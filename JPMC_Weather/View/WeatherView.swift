@@ -16,17 +16,18 @@ struct WeatherView: View {
     var body: some View {
         VStack(spacing: 10) {
             Spacer()
+            // Favorite button
             HStack {
                 Spacer()
                 Button(action: {
                     isFavorite.toggle()
                     if isFavorite {
+                        // Add city to favorites if it's not already there
                         viewModel.favoriteCities.append(viewModel.cityName)
-                        print(viewModel.favoriteCities)
                         viewModel.saveFavoriteCities()
                     } else {
+                        // Remove city from favorites if it's there
                         viewModel.favoriteCities.removeAll(where: { $0 == viewModel.cityName })
-                        print(viewModel.favoriteCities)
                         viewModel.saveFavoriteCities()
                     }
                 })
@@ -38,24 +39,31 @@ struct WeatherView: View {
                         .foregroundColor(.yellow)
                 }
                 .padding()
-                .offset(y:100)
+                .offset(y: 100)
             }
+            // Weather icon
             if let weatherIcon = viewModel.weatherIconImage {
                 Image(uiImage: weatherIcon)
             }
+            // City name
             Text(viewModel.cityName)
                 .fontWeight(.heavy)
+            // Temperature
             Text(viewModel.temperature)
                 .font(.system(size: 57))
+            // Weather description
             Text(viewModel.weatherDescription)
             Spacer()
         }
+        // Check if city is a favorite when cityName changes
         .onChange(of: viewModel.cityName, perform: { newValue in
             isFavorite = viewModel.favoriteCities.contains(viewModel.cityName)
         })
+        // Check if city is a favorite when favoriteCities changes
         .onChange(of: viewModel.favoriteCities, perform: { newValue in
             isFavorite = viewModel.favoriteCities.contains(viewModel.cityName)
         })
+        // Fetch weather data when the view appears
         .onAppear() {
             if let location = viewModel.locationManager.location {
                 viewModel.fetchWeatherData(location: location) { error in
@@ -71,14 +79,13 @@ struct WeatherView: View {
                         }
                     }
                 }
-                
             }
         }
     }
-    struct WeatherView_Previews: PreviewProvider {
-        static var previews: some View {
-            WeatherView(viewModel: WeatherViewModel())
-        }
+}
+struct WeatherView_Previews: PreviewProvider {
+    static var previews: some View {
+        WeatherView(viewModel: WeatherViewModel())
     }
 }
 

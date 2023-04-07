@@ -22,7 +22,6 @@ struct WeatherData: Codable {
     let id: Int
     let name: String
     let cod: Int
-    var favorites: [String]?
 }
 
 struct Coord: Codable {
