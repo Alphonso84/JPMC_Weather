@@ -107,6 +107,17 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
             return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        //When favorite city is tapped call is made to get weather for that city
+        let city = viewModel.favoriteCities[indexPath.row].replacingOccurrences(of: " ", with: "%20")
+        viewModel.fetchWeatherData(for:city) { error in
+            if let error = error {
+                print("Error fetching weather data: \(error)")
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
         }
