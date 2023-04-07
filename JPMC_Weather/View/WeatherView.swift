@@ -12,7 +12,20 @@ struct WeatherView: View {
     @ObservedObject var viewModel: WeatherViewModel
     @StateObject private var locationManager = LocationManager()
     @State private var isFavorite = false
+    @State private var showAlert = false
     
+    //This was a workaround I found from stackOverflow since @State showAlert alone was not updating everytime a new favorite was added. I need to do more research to fully understand how custom bindings work fully. 
+    private var alertBinding: Binding<Bool> {
+            Binding<Bool>(
+                get: { showAlert },
+                set: { newValue in
+                    if newValue {
+                        showAlert = true
+                    }
+                }
+            )
+        }
+
     var body: some View {
         VStack(spacing: 10) {
             Spacer()
@@ -25,6 +38,7 @@ struct WeatherView: View {
                         // Add city to favorites if it's not already there
                         viewModel.favoriteCities.append(viewModel.cityName)
                         viewModel.saveFavoriteCities()
+                        alertBinding.wrappedValue = true
                     } else {
                         // Remove city from favorites if it's there
                         viewModel.favoriteCities.removeAll(where: { $0 == viewModel.cityName })
@@ -54,6 +68,11 @@ struct WeatherView: View {
             // Weather description
             Text(viewModel.weatherDescription)
             Spacer()
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("City Added to Favorites"),
+                  message: Text("You have added \(viewModel.cityName) to your favorite cities."),
+                  dismissButton: .default(Text("OK")))
         }
         // Check if city is a favorite when cityName changes
         .onChange(of: viewModel.cityName, perform: { newValue in
