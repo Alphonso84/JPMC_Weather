@@ -86,6 +86,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource, UIS
                 }
             }
         }
+            searchBar.text = ""
             searchBar.resignFirstResponder()
         }
     

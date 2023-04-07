@@ -101,8 +101,10 @@ class WeatherViewModel: ObservableObject {
                 let decoder = JSONDecoder()
                 let weatherData = try decoder.decode(WeatherData.self, from: data)
                 print(weatherData)
-                self?.model = weatherData
-                self?.fetchWeatherIcon()
+                DispatchQueue.main.async {
+                    self?.model = weatherData
+                    self?.fetchWeatherIcon()
+                }
                 completion(nil)
             } catch {
                 completion(error)
